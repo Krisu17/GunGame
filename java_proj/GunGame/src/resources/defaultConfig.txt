@@ -1,0 +1,64 @@
+//Domyslna nazwa pierwszego gracza
+Krzysiek
+
+//Domyslna nazwa drugiego gracza
+Michal
+
+//Poczatkowe punkty pierwszego gracza
+2
+
+//Poczatkowe punkty drugiego gracza
+2
+
+//Poczatkowa predkosc spadania klockow
+0.5
+
+//Prog punktow, po ktorym zwieksza sie predkosc klockow
+20
+
+//Maksymalny kat obrotu lufy
+0.35
+
+//Maksymalna szerokosc bloku
+100
+
+//Maksymalna wysokosc bloku
+100
+
+//Ilosc typow klockow
+4
+
+//Punkty dla 1 klocka
+1
+
+//Punkty dla 2 klocka
+10
+
+//Punkty dla 3 klocka
+5
+
+//Punkty dla 4 klocka
+3
+
+//Kolory klockow podawane w schemacie 1-sza linia = R, 2-ga linia = G, 3-cia linia = B 
+
+//Kolory RGB dla 1 klocka
+255
+125
+0
+
+//Kolory RGB dla 2 klocka
+255
+230
+0
+
+//Kolory RGB dla 3 klocka
+165
+0
+255
+
+//Kolory RGB dla 4 klocka
+33
+191
+209
+

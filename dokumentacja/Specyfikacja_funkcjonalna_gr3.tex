@@ -1,0 +1,254 @@
+\documentclass[12pt]{report}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper]{geometry}
+\usepackage[myheadings]{fullpage}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx, wrapfig, subcaption, setspace, booktabs}
+\usepackage[T1]{fontenc}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage{fourier}
+\usepackage[protrusion=true, expansion=true]{microtype}
+\usepackage{sectsty}
+\usepackage{url, lipsum}
+\usepackage{tgbonum}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{color}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+\makeatletter
+\renewcommand{\thesection}{%
+  \ifnum\c@chapter<1 \@arabic\c@section
+  \else \thechapter.\@arabic\c@section
+  \fi
+}
+\makeatother
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\onehalfspacing
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+\fancyhf{}
+\pagestyle{fancy}  
+\chead{Specyfikacja funkcjonalna grupa 3}
+\cfoot{Strona \thepage/\pageref{LastPage}}
+\begin{document}
+{\fontfamily{cmr}\selectfont
+\title{ \normalsize \textsc{}
+		\\ [2.0cm]
+		\HRule{0.5pt} \\
+		\LARGE \textbf{\uppercase{Specyfikacja funkcjonalna grupa~3}
+		\HRule{0.5pt} \\ [0.5cm]
+		\normalsize \today \vspace*{5\baselineskip}}
+		}
+}
+
+\date{}
+
+\author{
+		Krzysztof Anderson i Michał Malinowski \\ }
+
+\maketitle\thispagestyle{fancy}
+\tableofcontents\thispagestyle{fancy}
+\newpage
+
+\sectionfont{\scshape}
+\section{Opis Ogólny}
+
+\subsection{Nazwa programu}
+„Gra w życie Johna Conwaya" stworzona przez Michała Malinowskiego i Krzysztofa Andersona w języku C.
+
+\subsection{Poruszany problem}
+Program potrafi wczytać początkowe ustawienie planszy, tworzyć nowe generacje według zasad gry i generować obrazy oraz pliki zapisu kolejnych kroków działania. Posiada opcjonalny tryb, który pozwoli prześledzić to jak powstają kolejne generacje.
+
+\subsection{Użytkownik docelowy}
+Projekt wykonany przez studentów pierwszego roku Informatyki Stosowanej w ramach zajęć projektowych z przedmiotu Języki i Metody Programowania 2. Poza twórcami, z programu będzie korzystał prowadzący laboratoria mgr inż. Paweł Zawadzki.
+
+\section{Opis funkcjonalności} 
+\subsection{Zasady gry}
+„Gra w życie Johna Conwaya" opiera się na badaniu otoczenia wokół danego pola na planszy i zmienianie jego stanu w zależności od otoczenia. Plansza gry składa się z 20x20 pól, które są wypełnione 0 i 1:
+\begin{itemize}
+  \item 0 – oznacza stan martwy komórki,
+  \item 1 – oznacza stan żywy komórki.
+\end{itemize}
+Do badania otoczenia wykorzystane zostało sąsiedztwo Moore'a, czyli zbadanie 8 sąsiadujących pól wokół pola, na którym aktualnie wykonujemy operację (znajdujących się: na południu, na południowym-zachodzie, na zachodzie, na północnym-zachodzie, na północy, na północnym-wschodzie, na wschodzie i~na południowym-wschodzie).
+Zestaw zasad przy tworzeniu nowej generacji jest następujący:
+
+\begin{itemize}
+  \item martwa komórka (stan 0), która ma dokładnie trzech żywych sąsiadów (o stanie 1), staje się żywa w następnej generacji (rodzi się, czyli zmienia swój stan na 1);
+  \item żywa komórka (stan 1) z dwoma albo trzema żywymi sąsiadami pozostaje nadal żywa. Przy innej liczbie sąsiadów umiera (zmienia swój stan na 0).
+\end{itemize}
+
+Program wykona taką liczbę generacji, jaka zostanie podana podczas wywołania.
+
+\subsection{Uruchomienie i korzystanie z programu}
+Podczas wywoływania programu należy podać w linii poleceń 3 argumenty (nie podanie ich spowoduje błąd i przerwanie pracy programu), a także opcjonalnie 4 argument.
+\subsubsection{Wzorcowe uruchomienie programu}
+\code{./gra\_w\_zycie [plik z danymi] [ilość generacji] -sbs }
+\begin{itemize}
+  \item \textbf{./gra\_w\_zycie} – ścieżka dostępu do programu;
+  \item \textbf{[plik z danymi]} – ścieżka do pliku, z którego ma zostać wczytana początkowa konfiguracja planszy, plik musi istnieć;
+  \item \textbf{[ilość generacji]} –  liczba generacji, które mają zostać wygenerowane przez program (gra „rozegra się” n razy), liczba z zakresu <1;100>;
+  \item \textbf{-sbs} – opcjonalna flaga „Step-by-step” pozwala na śledzenie kolejnych generacji. Podczas wywołania z tą flagą program będzie się zatrzymywał po stworzeniu kolejnej generacji i pytał nas, czy chcemy iść dalej (należy wpisać „n” i wcisnąć ENTER), czy chcemy zapisać tę generację do pliku PNG (należy wpisać „png” i wcisnąć ENTER, a następnie podać nazwę pliku, do którego chcemy wyeksportować obecną generację), czy chcemy wypisać tę generację do pliku tekstowego, pozwalającego na wczytanie jej później, jako stanu początkowego planszy (należy wpisać „txt” i wcisnąć ENTER, a następnie podać nazwę pliku, do którego chcemy wyeksportować obecną generację).
+\end{itemize}
+\subsection{Przykładowe poprawne uruchomienie programu:}
+\code{ ./gra\_w\_zycie dane/konfig1.txt 8 -sbs }\par\noident
+W wyniku wpisania takiej komendy zostanie uruchomiony program, wczytujący początkową konfigurację z pliku „konfig1.txt” znajdującego się w folderze \textit{Dane}, zatrzymującego się po wygenerowaniu każdej generacji, których ostatecznie będzie osiem, a wszystkie pliki, jakie utworzy program, zostaną zapisane w~folderze wyniki.
+\section{Możliwości programu}
+\begin{itemize}
+    \item Wczytanie z pliku tekstowego początkowego ustawienia planszy i przeprowadzenie na niej żądanej liczby generacji.
+    \item Wypisanie na ekran obecnej generacji.
+    \item Możliwość wyeksportowania każdej generacji do pliku PNG począwszy od pierwszej wygenerowanej, a skończywszy na ostatniej, którą program wygeneruje.
+    \item Możliwość wyeksportowania każdej generacji do pliku tekstowego począwszy od pierwszej. wygenerowanej, a skończywszy na ostatniej, którą program wygeneruje. Dodatkowo utworzony plik będzie można przy następnym uruchomieniu podać jako ustawienie początkowe planszy.
+    \item Możliwość zatrzymywania się po wygenerowaniu każdej kolejnej generacji (tryb „Step-by-step”) i zapytanie użytkownika, czy chce zobaczyć kolejną generację, czy może obecną wyeksportować do pliku PNG lub tekstowego.
+    \item Tworzenie pliku wynikowego o nazwie podanej przez użytkownika.
+    \item Obsługa błędów związanych z błędnymi danymi wejściowymi, błędnym podaniem argumentów wywołania oraz błędnymi nazwami poleceń i nazw generowanych plików.
+\end{itemize}
+\section{Format danych i struktura plików}
+\subsection{Słownik pojęć}
+\begin{itemize}
+    \item \textbf{plansza gry} – struktura traktowana jako tablica dwuwymiarowa, składająca się z 20 kolumn i wierszy, na których toczy się gra (plus bufor, na którym nie są wykonywane później żadne operacje). Do jej pól wpisywane są 0 i 1. W grze 0 oznacza stan martwy, a 1 oznacza stan żywy. Jej całościowy stan (trzeba wziąć pod uwagę stan każdego pola), kiedy program nie wykonuje na niej operacji, nazywany jest generacją.
+    \item \textbf{generacja} – stan wszystkich pól na planszy zawierających 0 i 1 (poza buforem), które zostały właśnie wczytane z pliku, lub każde kolejne ustawienie po przeprowadzeniu operacji na każdym elemencie z planszy w danym kroku.
+    \item \textbf{bufor} – skrajne pola w tabelach planszy gry (pierwszy i ostatni rząd oraz pierwsza i ostatnia kolumna) wypełnione 0. Na nich nie wykonuje się żadnych operacji, służą tylko do określenia stanu sąsiadujących elementów.
+\end{itemize}
+\subsection{Struktura katalogów i plików}
+\begin{itemize}
+    \item \textbf{bin/} – tu znajduje się plik wykonywalny wygenerowany przez \code{Makefile}
+    \item \textbf{dane/} – katalog, znajdują tu się przechowywane przykładowe dane wejściowe 
+    \item \textbf{src/} – katalog, znajdują tu się wszystkie pliki odpowiadające za działanie programu, opis każdego z tych plików zamieszczony jest w specyfikacji implementacyjnej
+    \begin{itemize}
+        \item gra.c
+        \item gra.h
+        \item png.c
+        \item png.h
+        \item sterowanie.c
+    \end{itemize}
+    \item \textbf{testy/} – katalog, znajdują tu się przechowywane testy poprawności działania programu i specjalnie przygotowane dane testowe
+    \item \textbf{wyniki/} – w tym katalogu będą się pojawiać wszystkie pliki, które program wygeneruje w trakcie działania
+    \item \textbf{Makefile} – plik odpowiedzialny za kompilowanie zmian w plikach z katalogu src/, tworzy plik wykonywalny "gra\_w\_zycie" w katalogu bin/, posiada także instrukcje, jak wykonać kolejne testy
+\end{itemize}
+\section{Przechowywanie danych w programie}
+Głównym elementem programu jest plansza gry, składająca się z pól typu \code{char}. Aby je przechowywać i korzystać z nich w sposób zbliżony do tablicy dwuwymiarowej, tworzona jest specjalna struktura, nazwana \textbf{\textit{playboard}}. Posiada w~sobie pole \code{column} typu \code{char*}, mogące pomieścić 22 znaki. Następnie \textbf{\textit{playboard}} umieszczana jest w tablicy (rezerwowana jest pamięć na 22 takie struktury i~ustawiany wskaźnik na pierwszą tego typu strukturę), dzięki czemu możemy odwoływać się do niej jak do tablicy dwuwymiarowej (kolejne struktury są „wierszami”, a kolejne znaki w \code{column} kolumnami). Z tego powodu termin ten zamiennie stosujemy ze słowem tablica. Do poprawnego działania gry potrzebujemy drugiej takiej samej tablicy struktur, aby na niej zapisywać generację, którą tworzymy (ta, na podstawie której budujemy nową, musi pozostać niezmieniona aż do momentu zakończenia działania algorytmu tworzącego nową generację ). Program przełącza wskaźnik aktualnej planszy gry na drugą tablicę, kiedy zostanie na niej wygenerowana nowa plansza na podstawie danych z~pierwszej tabeli. Następnie na podstawie nowo utworzonej generacji nadpisuje pierwszą tablicę struktur, według takiego samego schematu jak poprzednio. Dla uniknięcia błędów związanych z komórkami brzegowymi, inicjowane tablice są o 2 wiersze i 2 kolumny większe niż planowana plansza, a następnie do wszystkich pól znajdujących się naokoło tablicy wpisywane są 0.\par
+Liczba generacji do przeprowadzenia (podana przez użytkownika na wejściu) jest przechowywana jako zmienna typu \code{int}. Stwarza to oczywiście ograniczenia liczby generacji do maksymalnej wielkości, jaką może \code{int} przechowywać (2~147 483 647), jednak dla efektywnego działania programu maksymalna liczba generacji została ograniczona do 100, a minimalna do 1.\par
+Ścieżka wczytywania danych jest przechowywana jako tablica znaków (\code{char~*}).\par
+Flaga „Step-by-step” jest reprezentowana przez zmienną \code{bool}.
+\subsection{Dane wejściowe}
+Program przyjmuje jako dane wejściowe pliki tekstowe. Plik musi składać się \textbf{wyłącznie} z 0 i 1 oddzielonych białymi znakami o dokładnej liczbie odpowiadającej ilości pól na planszy (plansza gry 20x20 pól, co daje 400 liczb, które muszą znaleźć się w pliku wejściowym, podanie większej ilości liczb spowoduje błąd) . Ścieżka do pliku jest podawana jako drugi argument wywołania i musi być bezbłędna (tj. pod podanym adresem musi znajdować się plik o podanej nazwie i rozszerzeniu).
+\subsection{Dane wyjściowe}
+Program jest w stanie wygenerować 2 typy danych wyjściowych: obrazy w~formacie PNG oraz pliki tekstowe, które mogą później posłużyć jako dane wejściowe, do omawianego programu. Wyniki zostaną zapisanie w folderze \textit{Wyniki}. Użytkownik sam decyduje jak będą się nazywały pliki utworzone przez program, ponieważ za każdym razem będzie o to pytany. Kiedy program zostanie uruchomiony bez flagi \code{-sbs}, użytkownik zostanie zapytany tylko o zapis ostatniej z wygenerowanych plansz. Można zadecydować, czy zostanie utworzony plik PNG i/lub plik tekstowy z zapisem aktualnej generacji.
+\section{Scenariusz działania programu}
+\subsection{Scenariusz ogólny}
+\begin{enumerate}
+    \item Uruchomienie programu.
+    \item Wczytanie argumentów programu i ich właściwa interpretacja (np. zapalenie flagi „Step-by-step”).
+    \item Inicjalizacja planszy gry i jej kopii.
+    \item Wczytanie stanu planszy z pliku wejściowego, ewentualne zaraportowanie błędów.
+    \item Przeprowadzenie zadanej liczby generacji, przy czym:
+    \begin{enumerate}
+        \item	dla zgaszonej flagi „Step-by-step” zatrzymanie nastąpi dopiero przy ostatniej generacji i pojawi się zapytanie do użytkownika, czy zapisać tę generację do pliku PNG lub pliku tekstowego, a jeżeli tak to pod jaką nazwą;
+        \item	dla zapalonej flagi „Step-by-step” zatrzymywanie nastąpi po wygenerowaniu każdej generacji i pojawi się zapytanie do użytkownika, czy chce wygenerować kolejną, lub czy zapisać tę generację do pliku PNG lub pliku tekstowego, a jeżeli tak to pod jaką nazwą.
+    \end{enumerate}
+    \item Zakończenie działania programu.
+\end{enumerate}
+\subsection{Scenariusz szczegółowy}
+\begin{enumerate}
+\item Uruchomienie programu.
+\item Sprawdzenie argumentów:
+\begin{enumerate}
+    \item jeżeli użytkownik podał mniej niż 3 argumenty, program zgłasza błąd, że otrzymał za mało argumentów;
+    \item sprawdza, czy istnieje podany plik wejściowy, jeżeli tak otwiera go, w~przeciwnym razie zgłasza błąd, że nie istnieje taki plik wejściowy, lub że podczas otwierania pliku wystąpił błąd;
+    \item sprawdza czy podana liczba generacji jest liczbą, a następnie czy mieści się w zakresie <1;100>, w przeciwnym przypadku zgłasza błąd o złym argumencie podanym jako liczba generacji i podaje warunki konieczne, do zaakceptowania argumentu jako liczby generacji;
+    \item sprawdza czy została podana flaga wywołania „Step-by-step”, jeżeli tak, to zapala ją.
+    \end{enumerate}
+\item Zainicjowanie 2 tablic struktur \textbf{\textit{playboard}}, głównej i pomocniczej, po 22 struktury w każdej i z polami \code{char* column} mogącymi pomieścić 22 znaki.
+\item „Wyzerowanie buforu” w obu tablicach, czyli wpisanie do wszystkich pól znajdujących się na skraju tabeli (pierwszy i ostatni wiersz, pierwsza i~ostatnia kolumna) 0.
+\item Wczytywanie danych z pliku wejściowego do głównej tablicy przy czym:
+\begin{enumerate}
+    \item przy wczytywaniu kolejnego znaku sprawdzane jest, czy jest to 0 lub 1, a także czy to nie koniec pliku, w przeciwnym wypadku zgłaszany jest błąd w pliku wejściowym, program przerywa swoje działanie;
+    \item pierwsza liczba wczytana jest umieszczana w 2 wierszu i 2 kolumnie;
+    \item ostatnia liczba w wierszu znajduje się zawsze w przedostatniej kolumnie, kolejna trafia do następnego wiersza;
+    \item ostatnia liczba wczytana z pliku znajduje się w przedostatniej kolumnie w przedostatnim wierszu;
+    \item jeżeli po wczytaniu ostatniej liczby kolejnym znakiem w pliku nie jest znak końca pliku, zgłaszany jest błąd, że plik wejściowy jest za długi i~program przerywa swoje działanie.
+\end{enumerate}
+\item Wywołanie funkcji, która na podstawie głównej tablicy będzie wpisywać odpowiednie stany w odpowiednie miejsca tabeli pomocniczej przy czym:
+\begin{enumerate}
+    \item początek iteracji obu tablic ma miejsce od 2 wiersza i 2 kolumny;
+    \item ostatnią iteracją w wierszu w obu tablicach jest przedostatnia kolumna, następnie iteracja przechodzi do następnego wiersza;
+    \item w obu tablicach przedostatni wiersz jest ostatnim na którym są wykonywane operacje;
+    \item gdy krok 6 jest wykonywany po raz pierwszy, inicjowany jest licznik \code{int} i ma ustawianą wartość na 0, w przeciwnym wypadku za każdym razem, zanim zacznie się badanie nowego elementu, licznik musi być wyzerowany;
+    \item podczas badana komórki z tablicy głównej o współrzędnych (n)(m) (n-ty wiersz, m-ta kolumna) sprawdzane są wszystkie sąsiadujące z~nią komórki czyli:
+    \begin{center}
+    \begin{tabular}{ |c|c|c| } 
+    \hline
+    (n-1)(m-1) & (n-1)(m) & (n-1)(m+1) \\ 
+    \hline
+    (n)(m-1) &  & (n)(m+1) \\ 
+    \hline
+    (n+1)(m-1) & (n+1)(m) & (n+1)(m+1) \\ 
+    \hline
+    \end{tabular}
+    \end{center}
+
+    \item jeżeli w sąsiadującej komórce znajduje się 1, to do licznika jest dodawana 1, w przeciwnym wypadku program przechodzi do badania kolejnego sąsiada;
+    \item gdy zostają sprawdzeni już wszyscy sąsiedzi, program analizuje badaną komórkę w tabeli głównej o współrzędnych [n][m] i jeżeli jest:
+    \begin{enumerate}
+        \item 0 i licznik wynosi dokładnie 3, to w komórce [n][m] w tabeli pomocniczej wpisywana jest 1, w przeciwnym wypadku 0;
+        \item 1 i licznik wynosi 2 lub 3, to w komórce [n][m] w tabeli pomocniczej wpisywana jest 1, w przeciwnym wypadku 0.
+    \end{enumerate}
+    \item iteracja po tabeli głównej kończy się, jeżeli zostanie przebadany każdy element z tabeli głównej (poza buforem) i w każde miejsce tabeli pomocniczej (poza buforem) zostanie wpisany stan z nowej generacji.
+\end{enumerate}
+\item Wskaźnik na tabelę główną zamienia się ze wskaźnikiem na tabelę pomocniczą.
+\item Nowa generacja zostaje wypisana na ekran z obecnej tabeli głównej, przy czym:
+\begin{enumerate}
+    \item zostają wypisane wszystkie pola, poza buforem, z uwzględnieniem wierszy i kolumn, na których się znajdują;
+    \item pola, których wartość jest równa 0, są wypisywane jako znak spacji (nr 32 w kodzie ASCII);
+    \item pola, których wartość jest równa 1, są wypisywane jako znak pusty (nr 255 w kodzie ASCII).
+\end{enumerate}
+\item Gdy flaga „Step-by-step”:
+\begin{enumerate}
+    \item nie jest zapalona, automatycznie zostają ponownie wykonane kroki 6, 7 i 8 określoną przez użytkownika ilość razy (argument podany jako ilość generacji do wytworzenia). Następnie po wypisaniu ostatniej wytworzonej generacji zostaje pokazany komunikat informujący, że aby:
+    \begin{enumerate}
+        \item Przejść dalej, należy wpisać „n” i nacisnąć ENTER. Jest to ostatnia generacja, więc program zakończy swoje działanie.
+        \item Wyeksportować obecny układ planszy, należy wpisać „png” i nacisnąć ENTER. Następnie program zapyta, jak ma nazywać się plik, który utworzy. Zabronione jest podawanie znaków niedozwolonych tj. \bfseries\~  \"\# \% \& * : < > ? / \textbackslash \{ | \}.\mdseries  . Podczas próby użycia któregoś z~tych znaków zostanie wyświetlony komunikat o błędnej nazwie pliku i~użytkownik zostanie jeszcze raz poproszony o podanie nazwy. Gdy nazwa jest poprawna, zostanie uruchomiona funkcja odpowiedzialna za generowanie pliku o rozszerzeniu PNG na podstawie głównej tablicy i zawartych w niej danych z uwzględnieniem zapisu w kolumnach i wierszach (z pominięciem buforu). W~wyniku tego w folderze \textit{Wyniki} zostanie utworzony plik o rozszerzeniu PNG i~nazwie podanej przez użytkownika. Obraz zostanie wygenerowany przy pomocy biblioteki libpng, stworzony z czarnych i białych pikseli, gdzie czarne kwadraty to „martwe” pola, a białe kwadraty to „żyjące” pola (odpowiednio 0 i 1 w tablicy planszy). W razie błędu podczas tworzenia obrazu użytkownik zostanie o tym poinformowany. Kiedy proces zakończy się sukcesem, zostanie jeszcze raz wypisany komunikat o możliwych do wpisania poleceniach.
+        \item Wyeksportować obecny układ stanów do pliku tekstowego, który będzie mógł później posłużyć jako plik wejściowy przy kolejnym uruchomieniu (w pełni zgodny z wymogami pliku wejściowego omawianego programu) należy wpisać „txt” i nacisnąć ENTER. Następnie program zapyta, jak ma nazywać się plik, który utworzy. Zabronione jest podawanie znaków niedozwolonych tj. \bfseries\~  \"\# \% \& * : < > ? / \textbackslash \{ | \}.\mdseries . Podczas próby użycia któregoś z tych znaków zostanie wyświetlony komunikat o błędnej nazwie pliku i użytkownik zostanie jeszcze raz poproszony o podanie nazwy. Gdy nazwa jest poprawna, zostanie uruchomiona funkcja odpowiedzialna za generowanie pliku tekstowego na podstawie głównej tablicy i~zawartych w niej danych (z pominięciem buforu). W wyniku tego w folderze \textit{Wyniki} zostanie utworzony plik tekstowy o nazwie podanej przez użytkownika. Plik będzie zawierał 400 cyfr, 0~lub 1,~odpowiadających stanom pól z tablicy głównej. W razie błędu podczas tworzenia pliku użytkownik zostanie o tym poinformowany. Kiedy proces zakończy się sukcesem, zostanie jeszcze raz wypisany komunikat o możliwych do wpisania poleceniach.
+        \item W razie podania polecenia, które nie pasuje do żadnego z powyższych, zostanie wyświetlony komunikat o błędnym poleceniu i~zostanie jeszcze raz wypisany komunikat o możliwych do wpisania poleceniach.
+    \end{enumerate}
+    \item jest zapalona, program zatrzyma się po wygenerowaniu i wypisaniu pierwszej generacji. Zostanie pokazany komunikat informujący, że aby:
+    \begin{enumerate}
+        \item Przejść dalej, należy wpisać „n” i nacisnąć ENTER. Zostanie wtedy sprawdzone, czy właśnie utworzona generacja jest ostatnią jaka miała zostać wykonana. Jeżeli tak, program zakończy swoje działanie. W przeciwnym przypadku program przejdzie jeszcze raz kroki 6, 7, 8 i 9.
+        \item Schemat pozostałych opcji jest identyczny jak kroki ii, iii oraz iv w 9a.
+    \end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\section{Testowanie}
+\subsection{Ogólny przebieg testowania}
+Testy zostaną przeprowadzone przez specjalnie przygotowane dane i miniprogramy, które będą wywoływać badane funkcje na danych testowych. Testy będą polegały na sprawdzeniu oczekiwań z wynikami działania miniprogramów. Pliki i dane znaleźć będzie można w folderze \textit{Testy}. Wszystkie komendy do wywołania testów, będą zawarte w pliku Makefile.
+\end{document}

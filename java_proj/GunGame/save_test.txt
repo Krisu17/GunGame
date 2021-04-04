@@ -1,0 +1,24 @@
+//Domyslna nazwa pierwszego gracza
+12345678911
+
+//Domyslna nazwa drugiego gracza
+Michas
+
+//Poczatkowe punkty pierwszego gracza
+61
+
+//Poczatkowe punkty drugiego gracza
+2
+
+//Poczatkowa predkosc spadania klockow
+1.5
+
+//Prog punktow, po ktorym zwieksza sie predkosc klockow
+20
+
+//Maksymalny kat obrotu lufy
+3
+
+//Ilosc typow klockow
+3
+

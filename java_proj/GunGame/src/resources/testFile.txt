@@ -1,0 +1,5 @@
+Na gorze roze,
+Na dole papryka,
+Testuje Readera
+//Tego test nie przeczyta
+kropka
