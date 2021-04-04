@@ -1,3 +1,3 @@
 # GunGame
 
-Cała dokokumentacja znajduje się w folderze "dokumentacja".
+Pełna dokokumentacja znajduje się w folderze "dokumentacja".
